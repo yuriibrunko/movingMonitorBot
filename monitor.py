@@ -1,39 +1,28 @@
 import os
 from dotenv import load_dotenv
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
-# Завантажуємо змінні з .env
 load_dotenv()
-api_id = int(os.getenv("API_ID"))
-api_hash = os.getenv("API_HASH")
-bot_token = os.getenv("BOT_TOKEN")
-my_id = int(os.getenv("MY_ID"))
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+MY_ID = int(os.getenv("MY_ID"))
+USER_SESSION_STRING = os.getenv("USER_SESSION_STRING")
 
-# Створюємо клієнти
-user = TelegramClient("user_session", api_id, api_hash)
-bot = TelegramClient("bot_session", api_id, api_hash).start(bot_token=bot_token)
+user = TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH)
+bot = TelegramClient("bot_session", API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-# Ключові слова (під твою тему)
-KEYWORDS = [
-    "вантаж", "вантажі", "вантажне", "вантажоперевезення", "перевезення",
-    "доставка", "перевізник", "логістика", "фура", "єврофура", "тент",
-    "реф", "рефрижератор", "ТТН", "CMR", "FTL", "LTL",
-    "груз", "грузы", "грузоперевозки", "перевозка", "перевозчик",
-    "freight", "cargo", "shipping", "truck", "logistics", "reefer"
-]
-
-# Канали для моніторингу
-CHANNELS = ["@назва_каналу1", "@назва_каналу2"]
+CHANNELS = ["-1001495328651", "-1001495328651", "@ukraine_anwerp", "@BelgiaN1", "@belgia_ukr", "@belgiumua1", "@refugeesinBelgium", "@NL_BL_transport_work"]
+KEYWORDS = ["вантаж", "перевезти", "перевезення", "бус", "грузовий", "відвезти", "перевезти", "речі", "меблі", "вещи", "перевести", "грузовой"]
 
 @user.on(events.NewMessage(chats=CHANNELS))
 async def handler(event):
-    text = event.message.message.lower()
-    if any(keyword in text for keyword in KEYWORDS):
-        await bot.send_message(
-            my_id,
-            f"🔔 Знайшов збіг у {event.chat.title}:\n\n{text}"
-        )
+    text = (event.message.message or "").lower()
+    if any(k in text for k in KEYWORDS):
+        title = getattr(event.chat, "title", "невідомий канал")
+        await bot.send_message(MY_ID, f"🔔 Знайшов збіг у {title}:\n\n{text}")
 
-# Запускаємо
-user.start()
-user.run_until_disconnected()
+if __name__ == "__main__":
+    user.start()
+    user.run_until_disconnected()
