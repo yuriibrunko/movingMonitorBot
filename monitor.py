@@ -17,9 +17,15 @@ USER_SESSION_STRING = os.getenv("USER_SESSION_STRING")
 user = TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH)
 bot = TelegramClient("bot_session", API_ID, API_HASH)
 
-# канали, які реально моніторимо (⚠️ НЕ додавай сюди свого бота!)
+# канали для моніторингу
 CHANNELS = [
-    "@o_brunko",
+    "-1001495328651",
+    "@ukraine_anwerp",
+    "@BelgiaN1",
+    "@belgia_ukr",
+    "@belgiumua1",
+    "@refugeesinBelgium",
+    "@NL_BL_transport_work",
 ]
 
 # ключові слова
@@ -28,7 +34,7 @@ KEYWORDS = [
     "відвезти", "речі", "меблі", "вещи", "перевести", "грузовой"
 ]
 
-# антиспам (зберігаємо час останнього алерта для кожного каналу)
+# антиспам
 last_alert = {}
 
 
@@ -40,21 +46,39 @@ async def handler(event):
         chat = await event.get_chat()
         title = getattr(chat, "title", None) or getattr(chat, "username", None) or f"ID {chat.id}"
 
+        # автор повідомлення
+        sender = await event.get_sender()
+        author = f"@{sender.username}" if sender and sender.username else "невідомий"
+
+        # посилання на повідомлення (тільки якщо канал має username)
+        if chat.username:
+            link = f"https://t.me/{chat.username}/{event.id}"
+        else:
+            # для приватних/ID каналів (формат /c/...)
+            link = f"https://t.me/c/{str(chat.id)[4:]}/{event.id}"
+
         # антиспам: не більше 1 повідомлення з каналу за 60 секунд
         now = time.time()
         if chat.id in last_alert and now - last_alert[chat.id] < 60:
             return
         last_alert[chat.id] = now
 
-        await bot.send_message(
-            MY_ID,
-            f"🔔 Знайшов збіг у <b>{title}</b>:\n\n{text}",
-            parse_mode="html"
+        # формуємо повідомлення
+        msg = (
+            f"📢 <b>Чат:</b> {title}\n"
+            f"📦 <b>Категорія:</b> Вантажні перевезення по країні\n"
+            f"🌍 <b>Країна:</b> Бельгія\n"
+            f"📍 <b>Регіон:</b> невідомо\n"
+            f"🏙 <b>Місто:</b> невідомо\n"
+            f"🔗 <b>Посилання на повідомлення:</b> {link}\n"
+            f"👤 <b>Автор:</b> {author}\n\n"
+            f"📝 <b>Текст:</b>\n{text}"
         )
+
+        await bot.send_message(MY_ID, msg, parse_mode="html")
 
 
 async def main():
-    # запускаємо обох клієнтів
     await bot.start(bot_token=BOT_TOKEN)
     await user.start()
     print("✅ Бот і юзер запущені")
