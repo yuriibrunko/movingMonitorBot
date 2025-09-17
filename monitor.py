@@ -13,7 +13,7 @@ USER_SESSION_STRING = os.getenv("USER_SESSION_STRING")
 user = TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH)
 bot = TelegramClient("bot_session", API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-CHANNELS = ["-1001495328651", "-1001495328651", "@ukraine_anwerp", "@BelgiaN1", "@belgia_ukr", "@belgiumua1", "@refugeesinBelgium", "@NL_BL_transport_work"]
+CHANNELS = ["@MovingMonitorBot"]
 KEYWORDS = ["вантаж", "перевезти", "перевезення", "бус", "грузовий", "відвезти", "перевезти", "речі", "меблі", "вещи", "перевести", "грузовой"]
 
 @user.on(events.NewMessage(chats=CHANNELS))
