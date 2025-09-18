@@ -18,21 +18,6 @@ user = TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH)
 bot = TelegramClient("bot_session", API_ID, API_HASH)
 
 # канали для моніторингу
-# CHANNELS = [
-#     "@o_brunko",
-#     "-1001495328651",
-#     "@ukraine_anwerp",
-#     "@BelgiaN1",
-#     "@belgia_ukr",
-#     "@belgia_ukraina",
-#     "@ours_in_belgium",
-#     "@belgiumua1",
-#     "@refugeesinBelgium",
-#     "@NL_BL_transport_work",
-#     "@ukrainians_in_the_NL",
-#     "@ukrayintsi_v_belhiyi",
-#     "@NL_BL_transport_work"
-# ]
 CHANNELS = [
     -1001881412965,
     -1001246340723,
@@ -53,7 +38,6 @@ CHANNELS = [
     -1001172446062,
     -1001605292217
 ]
-
 
 # ключові слова
 KEYWORDS = [
@@ -81,7 +65,6 @@ async def handler(event):
         if chat.username:
             link = f"https://t.me/{chat.username}/{event.id}"
         else:
-            # для приватних/ID каналів (формат /c/...)
             link = f"https://t.me/c/{str(chat.id)[4:]}/{event.id}"
 
         # антиспам: не більше 1 повідомлення з каналу за 60 секунд
@@ -102,7 +85,11 @@ async def handler(event):
             f"📝 <b>Текст:</b>\n{text}"
         )
 
+        # відправляємо сформоване повідомлення
         await bot.send_message(MY_ID, msg, parse_mode="html")
+
+        # пересилаємо оригінал
+        await bot.forward_messages(MY_ID, event.message)
 
 
 async def main():
@@ -114,23 +101,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
-# виведення id всіх телеграм каналів
-
-# from telethon.sync import TelegramClient
-# from telethon.sessions import StringSession
-# import os
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# API_ID = int(os.getenv("API_ID"))
-# API_HASH = os.getenv("API_HASH")
-# USER_SESSION_STRING = os.getenv("USER_SESSION_STRING")
-
-# with TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH) as client:
-#     dialogs = client.get_dialogs()
-#     for dialog in dialogs:
-#         if dialog.is_channel:
-#             print(f"Назва: {dialog.name} | ID: {dialog.id}")
-
