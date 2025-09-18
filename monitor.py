@@ -1,5 +1,4 @@
 import os
-import time
 import asyncio
 from dotenv import load_dotenv
 from telethon import TelegramClient, events
@@ -45,9 +44,6 @@ KEYWORDS = [
     "відвезти", "речі", "меблі", "вещи", "перевести", "грузовой"
 ]
 
-# антиспам
-last_alert = {}
-
 
 @user.on(events.NewMessage(chats=CHANNELS))
 async def handler(event):
@@ -67,12 +63,6 @@ async def handler(event):
         else:
             link = f"https://t.me/c/{str(chat.id)[4:]}/{event.id}"
 
-        # антиспам
-        now = time.time()
-        if chat.id in last_alert and now - last_alert[chat.id] < 60:
-            return
-        last_alert[chat.id] = now
-
         # формуємо повідомлення
         msg = (
             f"📢 <b>Чат:</b> {title}\n"
@@ -90,7 +80,6 @@ async def handler(event):
 
         # пересилаємо оригінал повідомлення через юзера
         await user.forward_messages(MY_ID, event.message)
-
 
 
 async def main():
