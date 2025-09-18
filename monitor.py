@@ -20,6 +20,18 @@ bot = TelegramClient("bot_session", API_ID, API_HASH)
 # канали для моніторингу
 CHANNELS = [
     "@o_brunko",
+    "-1001495328651",
+    "@ukraine_anwerp",
+    "@BelgiaN1",
+    "@belgia_ukr",
+    "@belgia_ukraina",
+    "@ours_in_belgium",
+    "@belgiumua1",
+    "@refugeesinBelgium",
+    "@NL_BL_transport_work",
+    "@ukrainians_in_the_NL",
+    "@ukrayintsi_v_belhiyi",
+    "@NL_BL_transport_work"
 ]
 
 # ключові слова
