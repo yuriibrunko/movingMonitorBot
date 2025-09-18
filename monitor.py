@@ -67,7 +67,7 @@ async def handler(event):
         else:
             link = f"https://t.me/c/{str(chat.id)[4:]}/{event.id}"
 
-        # антиспам: не більше 1 повідомлення з каналу за 60 секунд
+        # антиспам
         now = time.time()
         if chat.id in last_alert and now - last_alert[chat.id] < 60:
             return
@@ -85,11 +85,12 @@ async def handler(event):
             f"📝 <b>Текст:</b>\n{text}"
         )
 
-        # відправляємо сформоване повідомлення
+        # відправляємо оформлене повідомлення через бота
         await bot.send_message(MY_ID, msg, parse_mode="html")
 
-        # пересилаємо оригінал
-        await bot.forward_messages(MY_ID, event.message)
+        # пересилаємо оригінал повідомлення через юзера
+        await user.forward_messages(MY_ID, event.message)
+
 
 
 async def main():
