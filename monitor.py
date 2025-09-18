@@ -78,8 +78,8 @@ async def handler(event):
         # відправляємо оформлене повідомлення через бота
         await bot.send_message(MY_ID, msg, parse_mode="html")
 
-        # пересилаємо оригінал повідомлення через юзера
-        await user.forward_messages(MY_ID, event.message)
+        # пересилаємо оригінал повідомлення (з forward info)
+        await user.forward_messages(MY_ID, event.message, from_peer=chat)
 
 
 async def main():
