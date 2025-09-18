@@ -34,6 +34,7 @@ bot = TelegramClient("bot_session", API_ID, API_HASH)
 #     "@NL_BL_transport_work"
 # ]
 CHANNELS = [
+    -1001881412965,
     -1001246340723,
     -1001925047673,
     -1001795965474,
