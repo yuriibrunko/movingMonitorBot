@@ -97,7 +97,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 API_ID = int(os.getenv("API_ID"))
-API_HASH = os.getenv("API_HASH"))
+API_HASH = os.getenv("API_HASH")
 USER_SESSION_STRING = os.getenv("USER_SESSION_STRING")
 
 with TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH) as client:
@@ -105,6 +105,7 @@ with TelegramClient(StringSession(USER_SESSION_STRING), API_ID, API_HASH) as cli
     for dialog in dialogs:
         if dialog.is_channel:
             print(f"Назва: {dialog.name} | ID: {dialog.id}")
+
 
 
 # if __name__ == "__main__":
