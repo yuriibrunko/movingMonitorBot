@@ -57,7 +57,7 @@ async def handler(event):
         sender = await event.get_sender()
         author = f"@{sender.username}" if sender and sender.username else "невідомий"
 
-        # посилання на повідомлення (тільки якщо канал має username)
+        # посилання на повідомлення
         if chat.username:
             link = f"https://t.me/{chat.username}/{event.id}"
         else:
@@ -75,11 +75,11 @@ async def handler(event):
             f"📝 <b>Текст:</b>\n{text}"
         )
 
-        # відправляємо оформлене повідомлення через бота
+        # 1. відправляємо оформлене повідомлення через бота
         await bot.send_message(MY_ID, msg, parse_mode="html")
 
-        # пересилаємо оригінал повідомлення (з forward info)
-        await user.forward_messages(MY_ID, event.message, from_peer=chat)
+        # 2. пересилаємо оригінал повідомлення через юзер-клієнта
+        await user.send_message(MY_ID, event.message)
 
 
 async def main():
