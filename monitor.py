@@ -79,7 +79,7 @@ async def handler(event):
         await bot.send_message(MY_ID, msg, parse_mode="html")
 
         # 2. пересилаємо оригінал повідомлення через юзер-клієнта
-        await user.send_message(MY_ID, event.message)
+        await user.forward_messages(MY_ID, event.message)
 
 
 async def main():
