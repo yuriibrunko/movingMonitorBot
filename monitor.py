@@ -84,7 +84,7 @@ async def handler(event):
         # 2) Спроба переслати оригінал через user.forward_messages
         try:
             # Forward by message id + explicit from_peer (надійніше)
-            await user.forward_messages(MY_ID, event.message.id, from_peer=chat)
+            await user.forward_messages("me", event.message.id, from_peer=chat)
         except Exception as e:
             # лог помилки пересилки — це допоможе зрозуміти причину
             print("ERROR: user.forward_messages failed:", repr(e))
