@@ -40,6 +40,10 @@ KEYWORDS = [
     "відвезти", "речі", "меблі", "ліжкко", "вещи", "перевести", "грузовой"
 ]
 
+# 📌 ID каналу/групи, куди складати переслані оригінали
+# заміни -1002223334445 на ID свого каналу (має починатись з -100...)
+TARGET_CHAT_ID = -1002223334445
+
 
 @user.on(events.NewMessage(chats=CHANNELS))
 async def handler(event):
@@ -78,26 +82,15 @@ async def handler(event):
         try:
             await bot.send_message(MY_ID, msg, parse_mode="html")
         except Exception as e:
-            # якщо бот не може відправити — логнемо
             print("ERROR: bot.send_message failed:", repr(e))
 
-        # 2) Спроба переслати оригінал через user.forward_messages
+        # 2) Пересилаємо оригінал у канал/групу для архіву
         try:
-            # Forward by message id + explicit from_peer (надійніше)
-            await user.forward_messages("me", event.message.id, from_peer=chat)
+            await user.forward_messages(TARGET_CHAT_ID, event.message)
         except Exception as e:
-            # лог помилки пересилки — це допоможе зрозуміти причину
-            print("ERROR: user.forward_messages failed:", repr(e))
-
-            # fallback: якщо не вдається переслати, надішлемо коротку резервну копію тексту
-            try:
-                fallback = f"📎 (Не вдалося переслати оригінал) Оригінал:\n\n{event.message.message or ''}"
-                await bot.send_message(MY_ID, fallback)
-            except Exception as e2:
-                print("ERROR: bot.send_message (fallback) failed:", repr(e2))
+            print("ERROR: forward_messages failed:", repr(e))
 
     except Exception as main_exc:
-        # Загальний лог, щоб нічого не губилось
         print("ERROR in handler:", repr(main_exc))
 
 
