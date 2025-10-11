@@ -1,4 +1,5 @@
 import os
+import re
 import asyncio
 from dotenv import load_dotenv
 from telethon import TelegramClient, events
@@ -155,7 +156,7 @@ async def handler(event):
         text = (event.message.message or "").lower()
 
         # 1. Перевіряємо ключові слова
-        if not any(k in text for k in KEYWORDS):
+        if not any(re.search(rf"\b{k}\b", text) for k in KEYWORDS):
             return
 
         # 2. Фільтруємо рекламу (стоп-слова)
